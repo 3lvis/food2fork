@@ -15,7 +15,10 @@ class APIClient {
 
     init() {
         networking = Networking(baseURL: "http://food2fork.com")
+        networking.disableErrorLogging = true
+
         assetsNetworking = Networking(baseURL: "http://static.food2fork.com")
+        assetsNetworking.disableErrorLogging = true
     }
 
     static func path(forSearchedTerm searchTerm: String) -> String? {
