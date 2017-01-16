@@ -1,4 +1,4 @@
-# Food2Fork for iOS
+![Networking](https://github.com/3lvis/food2fork-ios/blob/master/GitHub/cover.png?raw=true)
 
 API description: http://food2fork.com/about/api
 
