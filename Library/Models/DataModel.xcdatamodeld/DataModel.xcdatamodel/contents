@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="11759" systemVersion="16C67" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Recipe" representedClassName="Recipe" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="true"/>
+                <entry key="hyper.remoteKey" value="recipe_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="imageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ingredientsStorage" optional="YES" attributeType="Binary" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="ingredients"/>
+            </userInfo>
+        </attribute>
+        <attribute name="publisher" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="publisherURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="socialRank" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="sourceURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="url" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="f2f_url"/>
+            </userInfo>
+        </attribute>
+    </entity>
+    <elements>
+        <element name="Recipe" positionX="-63" positionY="-18" width="128" height="180"/>
+    </elements>
+</model>
