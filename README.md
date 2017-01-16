@@ -1,4 +1,4 @@
-![Networking](https://github.com/3lvis/food2fork-ios/blob/master/GitHub/cover.png?raw=true)
+![Cover](https://gitlab.com/elvis/food2fork-ios/raw/bd7b475c3d7588a825fb2065557903bbee5bbf0e/GitHub/cover.png)
 
 API description: http://food2fork.com/about/api
 
