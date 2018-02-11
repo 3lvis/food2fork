@@ -7,4 +7,5 @@ framework module Networking {
 
 module Networking.Swift {
     header "Networking-Swift.h"
+    requires objc
 }

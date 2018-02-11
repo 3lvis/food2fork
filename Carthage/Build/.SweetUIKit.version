@@ -1,0 +1,21 @@
+{
+  "Mac" : [
+
+  ],
+  "watchOS" : [
+
+  ],
+  "tvOS" : [
+    {
+      "name" : "SweetUIKit",
+      "hash" : "d121daa2429a1b82dfe21e1d09482c4d45f606bda733df5078bb3c60816dd6b5"
+    }
+  ],
+  "commitish" : "474f69d4e5fc5af7279e6677e7a7281f4223e79e",
+  "iOS" : [
+    {
+      "name" : "SweetUIKit",
+      "hash" : "315066e477f14c54db1b6b831face87456094e889e46b71fd268634dd9e6cd82"
+    }
+  ]
+}

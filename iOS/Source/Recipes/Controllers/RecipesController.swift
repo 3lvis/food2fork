@@ -118,7 +118,7 @@ extension RecipesController: UISearchBarDelegate {
         tableView.isScrollEnabled = true
 
         let searchedText = searchController.searchBar.text ?? ""
-        if searchedText.characters.count == 0 {
+        if searchedText.count == 0 {
             tableView.alpha = 0
             resetSearch()
         } else {

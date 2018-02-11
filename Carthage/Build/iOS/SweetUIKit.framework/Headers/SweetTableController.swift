@@ -1,35 +1,45 @@
-#if os(iOS) || os(tvOS)
-    import UIKit
+import UIKit
 
-    open class SweetTableController: UIViewController {
-        open var tableView: UITableView
+open class SweetTableController: UIViewController {
+    open var tableView: UITableView
 
-        public init(style: UITableViewStyle = .plain) {
-            let view = UITableView(frame: .zero, style: style)
-            view.translatesAutoresizingMaskIntoConstraints = false
-            self.tableView = view
+    public var clearsSelectionOnViewWillAppear = true
 
-            super.init(nibName: nil, bundle: nil)
-        }
+    public init(style: UITableViewStyle = .plain) {
+        let view = UITableView(frame: .zero, style: style)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        tableView = view
 
-        public required init?(coder aDecoder: NSCoder) {
-            fatalError("The method `init?(coder)` is not implemented for this class.")
-        }
+        super.init(nibName: nil, bundle: nil)
+    }
 
-        open override func viewDidLoad() {
-            super.viewDidLoad()
+    public required init?(coder _: NSCoder) {
+        fatalError("The method `init?(coder)` is not implemented for this class.")
+    }
 
-            self.view.addSubview(self.tableView)
+    open override func viewDidLoad() {
+        super.viewDidLoad()
 
-            self.addConstraints()
-        }
+        view.addSubview(tableView)
 
-        func addConstraints() {
-            let anchors = [self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor), self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor), self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor), self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)]
-            for anchor in anchors {
-                anchor.priority = UILayoutPriorityDefaultLow
-                anchor.isActive = true
+        addConstraints()
+    }
+
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if clearsSelectionOnViewWillAppear {
+            if let indexPath = tableView.indexPathForSelectedRow {
+                tableView.deselectRow(at: indexPath, animated: true)
             }
         }
     }
-#endif
+
+    func addConstraints() {
+        let anchors = [self.tableView.topAnchor.constraint(equalTo: self.view.topAnchor), self.tableView.leftAnchor.constraint(equalTo: self.view.leftAnchor), self.tableView.rightAnchor.constraint(equalTo: self.view.rightAnchor), self.tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)]
+        for anchor in anchors {
+            anchor.priority = UILayoutPriority.defaultLow
+            anchor.isActive = true
+        }
+    }
+}

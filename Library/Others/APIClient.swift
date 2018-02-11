@@ -1,7 +1,6 @@
 import Foundation
-import DATAStack
-import Networking
 import Sync
+import Networking
 import CoreData
 import UIKit
 
@@ -15,17 +14,14 @@ class APIClient {
 
     init() {
         networking = Networking(baseURL: "http://food2fork.com")
-        networking.disableErrorLogging = true
-
         assetsNetworking = Networking(baseURL: "http://static.food2fork.com")
-        assetsNetworking.disableErrorLogging = true
     }
 
     static func path(forSearchedTerm searchTerm: String) -> String? {
         let encodedSearchTerm = searchTerm.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
 
         // We need to avoid requests for empty strings.
-        guard encodedSearchTerm.characters.count > 0 else {
+        guard encodedSearchTerm.count > 0 else {
             return nil
         }
 
@@ -41,7 +37,7 @@ class APIClient {
 
     func cancelPreviousRequest() {
         if let currentSearchRequestID = currentSearchRequestID {
-            networking.cancel(with: currentSearchRequestID)
+            networking.cancel(currentSearchRequestID)
             self.currentSearchRequestID = nil
         }
     }
@@ -60,13 +56,14 @@ class APIClient {
             return
         }
 
-        self.currentSearchRequestID = networking.GET(path) { json, error in
-            if let error = error {
-                if error.code != URLError.cancelled.rawValue {
-                    completion(error)
+        self.currentSearchRequestID = networking.get(path) { result in
+            switch result {
+            case .failure(let response):
+                if response.error.code != URLError.cancelled.rawValue {
+                    completion(response.error)
                 }
-            } else {
-                let json = json as? [String : AnyObject] ?? [String : AnyObject]()
+            case .success(let response):
+                let json = response.dictionaryBody
 
                 // The API sometimes will throw valid status codes but errors in the JSON.
                 if let otherAPIError = json["error"] as? String {
@@ -87,19 +84,21 @@ class APIClient {
 
     func fetchInfo(for recipe: Recipe, dataStore: DataStore = .shared, completion: @escaping (_ error: NSError?) -> ()) {
         let path = APIClient.path(forRecipe: recipe)!
-        networking.GET(path) { json, error in
-            if let error = error, error.code != URLError.cancelled.rawValue {
-                completion(error)
-            } else {
-                DispatchQueue.main.async {
-                    let json = json as? [String: AnyObject] ?? [String: AnyObject]()
-                    let recipeJSON = json["recipe"] as? [String: AnyObject] ?? [String: AnyObject]()
-                    let ingredients = recipeJSON["ingredients"] as? [String] ?? [String]()
-                    recipe.ingredientsStorage = NSKeyedArchiver.archivedData(withRootObject: ingredients) as NSData?
-                    try! dataStore.mainContext.save()
 
-                    completion(nil)
+        networking.get(path) { result in
+            switch result {
+            case .failure(let response):
+                if response.error.code != URLError.cancelled.rawValue {
+                    completion(response.error)
                 }
+            case .success(let response):
+                let json = response.dictionaryBody
+                let recipeJSON = json["recipe"] as? [String: AnyObject] ?? [String: AnyObject]()
+                let ingredients = recipeJSON["ingredients"] as? [String] ?? [String]()
+                recipe.ingredientsStorage = NSKeyedArchiver.archivedData(withRootObject: ingredients) as NSData
+                try! dataStore.mainContext.save()
+
+                completion(nil)
             }
         }
     }
@@ -108,7 +107,14 @@ class APIClient {
     func downloadImage(_ imageURL: String?, completion: @escaping (_ image: UIImage?, _ error: NSError?) -> (Void)) -> String? {
         if let imageURL = imageURL {
             let (_, path) = Networking.splitBaseURLAndRelativePath(for: imageURL)
-            let requestIdentifier = assetsNetworking.downloadImage(path, completion: completion)
+            let requestIdentifier = assetsNetworking.downloadImage(path) { result in
+                switch result {
+                case .failure(let response):
+                    completion(nil, response.error)
+                case .success(let response):
+                    completion(response.image, nil)
+                }
+            }
 
             return requestIdentifier
         }
@@ -117,6 +123,6 @@ class APIClient {
     }
 
     func cancelImageDownload(withRequestID requestID: String) {
-        assetsNetworking.cancel(with: requestID)
+        assetsNetworking.cancel(requestID)
     }
 }

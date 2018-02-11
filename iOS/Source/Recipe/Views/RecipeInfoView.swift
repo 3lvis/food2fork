@@ -116,11 +116,11 @@ class RecipeInfoView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func viewInstructions(button: UIButton) {
+    @objc func viewInstructions(button: UIButton) {
         delegate?.recipeInfoView(self, didPressViewInstructionsButton: button)
     }
 
-    func viewOriginal(button: UIButton) {
+    @objc func viewOriginal(button: UIButton) {
         delegate?.recipeInfoView(self, didPressViewOriginalButton: button)
     }
 }
